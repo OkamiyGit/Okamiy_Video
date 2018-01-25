@@ -1,15 +1,15 @@
 package com.example.wangqing.okamiy_video;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-public class SpalshActivity extends AppCompatActivity {
+public class SpalshActivity extends Activity {
     private SharedPreferences mPreferences;
     private static final int GO_HOME = 1;
     private static final int GO_GUIDE = 2;
@@ -26,7 +26,7 @@ public class SpalshActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //读取配置文件，进行判断是不是首次登录
-        mPreferences = getSharedPreferences("", MODE_PRIVATE);
+        mPreferences = getSharedPreferences("config", MODE_PRIVATE);
         //初始化
         init();
 
@@ -52,6 +52,7 @@ public class SpalshActivity extends AppCompatActivity {
             mActivity = new WeakReference<SpalshActivity>(activity);
         }
 
+        @Override
         public void handleMessage(Message msg) {
             SpalshActivity activity = mActivity.get();
             if (activity != null) {
