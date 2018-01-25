@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import com.example.wangqing.okamiy_video.home.HomeActivity;
+
 import java.lang.ref.WeakReference;
 
 public class SpalshActivity extends Activity {

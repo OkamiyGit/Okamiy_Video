@@ -4,9 +4,12 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.wangqing.okamiy_video.R;
+
 /**
  * Created by Okamiy on 2018/1/25.
  * Email: 542839122@qq.com
+ *  频道
  */
 
 public class Channel implements Parcelable {
@@ -29,33 +32,33 @@ public class Channel implements Parcelable {
         channelId = id;
         mContext = context;
         switch (channelId) {
-//            case SHOW:
-//                channelName = mContext.getResources().getString(R.string.channel_series);
-//                break;
-//            case MOVIE:
-//                channelName = mContext.getResources().getString(R.string.channel_movie);
-//                break;
-//            case COMIC:
-//                channelName = mContext.getResources().getString(R.string.channel_comic);
-//                break;
-//            case DOCUMENTRY:
-//                channelName = mContext.getResources().getString(R.string.channel_documentary);
-//                break;
-//            case MUSIC:
-//                channelName = mContext.getResources().getString(R.string.channel_music);
-//                break;
-//            case VARIETY:
-//                channelName = mContext.getResources().getString(R.string.channel_variety);
-//                break;
-//            case LIVE:
-//                channelName = mContext.getResources().getString(R.string.channel_live);
-//                break;
-//            case FAVORITE:
-//                channelName = mContext.getResources().getString(R.string.channel_favorite);
-//                break;
-//            case HISTORY:
-//                channelName = mContext.getResources().getString(R.string.channel_history);
-//                break;
+            case SHOW:
+                channelName = mContext.getResources().getString(R.string.channel_series);
+                break;
+            case MOVIE:
+                channelName = mContext.getResources().getString(R.string.channel_movie);
+                break;
+            case COMIC:
+                channelName = mContext.getResources().getString(R.string.channel_comic);
+                break;
+            case DOCUMENTRY:
+                channelName = mContext.getResources().getString(R.string.channel_documentary);
+                break;
+            case MUSIC:
+                channelName = mContext.getResources().getString(R.string.channel_music);
+                break;
+            case VARIETY:
+                channelName = mContext.getResources().getString(R.string.channel_variety);
+                break;
+            case LIVE:
+                channelName = mContext.getResources().getString(R.string.channel_live);
+                break;
+            case FAVORITE:
+                channelName = mContext.getResources().getString(R.string.channel_favorite);
+                break;
+            case HISTORY:
+                channelName = mContext.getResources().getString(R.string.channel_history);
+                break;
             default:
                 break;
         }

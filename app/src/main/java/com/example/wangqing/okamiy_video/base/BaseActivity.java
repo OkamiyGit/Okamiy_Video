@@ -8,9 +8,6 @@ import android.view.View;
 
 import com.example.wangqing.okamiy_video.R;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * Created by Okamiy on 2018/1/25.
  * Email: 542839122@qq.com
@@ -18,27 +15,44 @@ import butterknife.Unbinder;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected Toolbar mToolBar;
-    private Unbinder bind;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-        bind = ButterKnife.bind(this);
         initView();
         initData();
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     protected abstract int getLayoutId();
 
+    /**
+     *  view相关
+     */
     protected abstract void initView();
 
+    /**
+     *  数据相关
+     */
     protected abstract void initData();
 
+    /**
+     *  简化初始化view
+     * @param resId
+     * @param <T>
+     * @return
+     */
     protected <T extends View> T bindViewId(int resId) {
         return (T) findViewById(resId);
     }
 
+    /**
+     *  支持Toolbar
+     */
     protected void setSupportActionBar() {
         mToolBar = bindViewId(R.id.toolbar);
         if (mToolBar != null) {
@@ -46,20 +60,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    //是否需要ActionBar返回箭头
+    /**
+     * 是否需要ActionBar返回箭头
+     * @param isSupport
+     */
     protected void setSupportArrowActionBar(boolean isSupport) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(isSupport);
     }
 
+    /**
+     *  设置Toolbar的图片
+     * @param resId
+     */
     protected void setActionBarIcon(int resId) {
         if (mToolBar != null) {
             mToolBar.setNavigationIcon(resId);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        bind.unbind();
     }
 }

@@ -24,6 +24,10 @@ public abstract class BaseFragment extends Fragment {
         return mContentView;
     }
 
+    /**
+     *  添加资源文件：xml布局
+     * @return
+     */
     protected abstract int getLayoutId();
 
     protected abstract void initView();
