@@ -30,7 +30,7 @@ public class ImageUtils {
      */
     public static void disPlayImage(ImageView view, String url, int width, int height) {
         if (view != null && url != null && width > 0 && height > 0) {
-            if (width > height) {
+            if (width > height) {//横图
                 Glide.with(view.getContext())
                         .load(url) //加载图片url
                         .diskCacheStrategy(DiskCacheStrategy.ALL)// 设置缓存
@@ -38,7 +38,7 @@ public class ImageUtils {
                         .fitCenter()//设置图片居中, centerCrop会截断大图,不会自适应, fitCenter居中自适应
                         .override(height, width)//重写宽高,注意顺序
                         .into(view);//加载imageview上
-            } else {
+            } else {//竖图
                 Glide.with(view.getContext())
                         .load(url) //加载图片url
                         .diskCacheStrategy(DiskCacheStrategy.ALL)// 设置缓存

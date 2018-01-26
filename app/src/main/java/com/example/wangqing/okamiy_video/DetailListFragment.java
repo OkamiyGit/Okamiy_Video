@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wangqing.okamiy_video.api.OnGetChannelAlbumListener;
 import com.example.wangqing.okamiy_video.api.SiteApi;
@@ -39,7 +40,7 @@ public class DetailListFragment extends BaseFragment {
     private int mChannelId;
     private static final String CHANNEL_ID = "channelid";
     private static final String SITE_ID = "siteid";
-    private static final int CLUMNS_NUM = 2;
+    private static final int COLUMNS_NUM = 2;
     //刷新时长
     private static final int REFREASH_DURATION = 1500;
     //加载更多时长（加在一页或者更多数据）
@@ -117,7 +118,7 @@ public class DetailListFragment extends BaseFragment {
         mEmptyView.setText(getActivity().getResources().getString(R.string.load_more_text));
 
         //RecyclerView
-        mRecyclerView.setGridLayout(3);
+        mRecyclerView.setGridLayout(mColumns);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnPullLoadMoreListener(new PullLoadMoreListener());
 
@@ -225,10 +226,32 @@ public class DetailListFragment extends BaseFragment {
     }
 
     /**
-     * 请求接口加载数据
+     * 请求接口加载新数据
      */
     private void reFreshData() {
+        //加载新数据时需要设为 pageNo=0
+        pageNo = 0;
+        //清空Adapter
+        mAdapter = null;
+        //重新创建一个Adapter
+        mAdapter = new DetailListAdapter(getActivity(), new Channel(mChannelId, getActivity()));
+        //第一次加载数据
+        loadData();
 
+        //根据分类添加不同的数据
+        if (mSiteId == Site.LETV) {
+            mColumns = 2;
+            //在乐视下相关频道为2列
+            mAdapter.setColumns(mColumns);
+        } else {
+            mColumns = 3;
+            mAdapter.setColumns(mColumns);
+        }
+
+        //给RecyclerView设置Adapter，并提示已经加载了最新数据
+        mRecyclerView.setAdapter(mAdapter);
+
+        Toast.makeText(getActivity(), getResources().getString(R.string.loaded_later_data), Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -273,8 +296,8 @@ public class DetailListFragment extends BaseFragment {
                 }
 
                 Point point = null;
-                //重新计算宽高
-                if (mColumns == CLUMNS_NUM) {
+                //重新计算宽高:对不同columns分别进行计算
+                if (mColumns == COLUMNS_NUM) {
                     point = ImageUtils.getHorPostSize(mContext, mColumns);
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(point.x, point.y);
                     itemViewHolder.albumPoster.setLayoutParams(params);
@@ -284,7 +307,7 @@ public class DetailListFragment extends BaseFragment {
                     itemViewHolder.albumPoster.setLayoutParams(params);
                 }
 
-                //判断垂直方向上的海报是否存在
+                //判断海报是否存在
                 if (album.getVerImgUrl() != null) {
                     ImageUtils.disPlayImage(itemViewHolder.albumPoster, album.getVerImgUrl(), point.x, point.y);
                 } else if (album.getHorImgUrl() != null) {
@@ -292,16 +315,18 @@ public class DetailListFragment extends BaseFragment {
                 } else {
                     //TOD 默认图: 布局已经添加背景
                 }
-                itemViewHolder.resultContainer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        if (mChannelId == Channel.DOCUMENTRY || mChannelId == Channel.MOVIE || mChannelId == Channel.VARIETY || mChannelId == Channel.MUSIC) {
-//                            AlbumDetailActivity.launch(getActivity(), album, 0, true);
-//                        } else {
-//                            AlbumDetailActivity.launch(getActivity(), album);
-//                        }
-                    }
-                });
+
+                //                //设置item监听
+                //                itemViewHolder.resultContainer.setOnClickListener(new View.OnClickListener() {
+                //                    @Override
+                //                    public void onClick(View v) {
+                //                        if (mChannelId == Channel.DOCUMENTRY || mChannelId == Channel.MOVIE || mChannelId == Channel.VARIETY || mChannelId == Channel.MUSIC) {
+                //                            AlbumDetailActivity.launch(getActivity(), album, 0, true);
+                //                        } else {
+                //                            AlbumDetailActivity.launch(getActivity(), album);
+                //                        }
+                //                    }
+                //                });
 
             }
 
@@ -353,6 +378,4 @@ public class DetailListFragment extends BaseFragment {
             }
         }
     }
-
-
 }

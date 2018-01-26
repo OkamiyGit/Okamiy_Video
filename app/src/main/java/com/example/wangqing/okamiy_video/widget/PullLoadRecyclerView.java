@@ -247,13 +247,6 @@ public class PullLoadRecyclerView extends LinearLayout {
                 }
             }
 
-            //SwipeRefreshLayout是否是启用的即可以往下拉的时候,设置为true，反之fasle
-            if (mSwipeRefreshLayout.isEnabled()) {
-                mSwipeRefreshLayout.setEnabled(true);
-            } else {
-                mSwipeRefreshLayout.setEnabled(false);
-            }
-
             /**
              * 什么时候触发上拉加载更多？
              *  1.加载更多是false
@@ -261,6 +254,8 @@ public class PullLoadRecyclerView extends LinearLayout {
              *  3.mSwipeRefreshLayout可以用
              *  4.不是处于下拉刷新状态
              *  5.偏移量dx > 0 或dy > 0
+             *
+             *  注意：加载更多时下拉刷新要设置为不可用，反之启用下拉刷新
              */
             //mIsLoadMore为=true并且最后一个可见Item下标等于我们数据的总和
             //并且偏移量大于0,时触发加载更多
@@ -273,10 +268,9 @@ public class PullLoadRecyclerView extends LinearLayout {
                 loadMoreData();
                 //在加载更多时,禁止mSwipeRefreshLayout使用
                 mSwipeRefreshLayout.setEnabled(false);
-            } else {
+            } else {//不是加载更多时需要让下拉刷新可用
                 mSwipeRefreshLayout.setEnabled(true);
             }
-
         }
     }
 }

@@ -2,9 +2,15 @@ package com.example.wangqing.okamiy_video.api;
 
 import android.util.Log;
 
+import com.example.wangqing.okamiy_video.model.Album;
+import com.example.wangqing.okamiy_video.model.AlbumList;
 import com.example.wangqing.okamiy_video.model.Channel;
+import com.example.wangqing.okamiy_video.model.ErrorInfo;
+import com.example.wangqing.okamiy_video.model.Site;
 import com.example.wangqing.okamiy_video.utils.OkHttpUtils;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -104,7 +110,7 @@ public class LetvApi extends BaseSiteApi {
     @Override
     public void onGetChannelAlbums(Channel channel, int pageNo, int pageSize, OnGetChannelAlbumListener listener) {
         String url = getChannelAlbumUrl(channel, pageNo, pageSize);
-//        doGetChannelAlbumsByUrl(url, listener);
+        doGetChannelAlbumsByUrl(url, listener);
     }
 
     /*
@@ -147,99 +153,103 @@ public class LetvApi extends BaseSiteApi {
         return channelId;
     }
 
-//    /**
-//     * 发请求
-//     *
-//     * @param url
-//     * @param listener
-//     */
-//    private void doGetChannelAlbumsByUrl(final String url, final OnGetChannelAlbumListener listener) {
-//        OkHttpUtils.excute(url, new Callback() {
-//
-//            //失败
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                if (listener != null) {
-//                    ErrorInfo info = buildErrorInfo(url, "doGetChannelAlbumsByUrl", e, ErrorInfo.ERROR_TYPE_URL);
-//                    listener.onGetChannelAlbumFailed(info);
-//                }
-//            }
-//
-//            //成功（乐视视频基本都是横图）
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                if (!response.isSuccessful()) {
-//                    ErrorInfo info = buildErrorInfo(url, "doGetChannelAlbumsByUrl", null, ErrorInfo.ERROR_TYPE_HTTP);
-//                    listener.onGetChannelAlbumFailed(info);
-//                    return;
-//                }
-//
-//                /**
-//                 * 拿到Json串，解析Json
-//                 */
-//                String json = response.body().string();
-//                try {
-//                    JSONObject resultJson = new JSONObject(json);
-//                    JSONObject bodyJson = resultJson.optJSONObject("body");
-//
-//                    //有数据解析
-//                    if (bodyJson.optInt("album_count") > 0) {
-//                        //将结果转化为AlbumList
-//                        AlbumList list = new AlbumList();
-//                        JSONArray albumListJosn = bodyJson.optJSONArray("album_list");
-//                        for (int i = 0; i < albumListJosn.length(); i++) {
-//                            Album album = new Album(Site.LETV);
-//                            JSONObject albumJson = albumListJosn.getJSONObject(i);
-//                            album.setAlbumId(albumJson.getString("aid"));
-//                            album.setAlbumDesc(albumJson.getString("subname"));//描述
-//                            album.setTitle(albumJson.getString("name"));
-//                            album.setTip(albumJson.getString("subname"));
-//
-//                            //由于图片有两个选项，我们只需要选择一个即可
-//                            JSONObject jsonImage = albumJson.getJSONObject("images");
-//                            //读取【400*300】字符
-//                            String imageurl = StringEscapeUtils.unescapeJava(jsonImage.getString("400*300"));
-//                            album.setHorImgUrl(imageurl);
-//                            list.add(album);
-//                        }
-//                        if (list != null) {
-//                            if (list.size() > 0 && listener != null) {
-//                                listener.onGetChannelAlbumSuccess(list);
-//                            }
-//                        } else {
-//                            ErrorInfo info = buildErrorInfo(url, "doGetChannelAlbumsByUrl", null, ErrorInfo.ERROR_TYPE_DATA_CONVERT);
-//                            listener.onGetChannelAlbumFailed(info);
-//                        }
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                    ErrorInfo info = buildErrorInfo(url, "doGetChannelAlbumsByUrl", null, ErrorInfo.ERROR_TYPE_PARSE_JSON);
-//                    listener.onGetChannelAlbumFailed(info);
-//                }
-//            }
-//        });
-//    }
-//
-//    /**
-//     * 封装为ErrorInfo
-//     *
-//     * @param url
-//     * @param functionName
-//     * @param e
-//     * @param type
-//     * @return
-//     */
-//    private ErrorInfo buildErrorInfo(String url, String functionName, Exception e, int type) {
-//        ErrorInfo info = new ErrorInfo(Site.LETV, type);
-//        info.setExceptionString(e.getMessage());
-//        info.setFunctionName(functionName);
-//        info.setUrl(url);
-//        info.setTag(TAG);
-//        info.setClassName(TAG);
-//        return info;
-//    }
-//
-//
+    /**
+     * 发请求
+     *
+     * @param url
+     * @param listener
+     */
+    private void doGetChannelAlbumsByUrl(final String url, final OnGetChannelAlbumListener listener) {
+        OkHttpUtils.excute(url, new Callback() {
+
+            //失败
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    ErrorInfo info = buildErrorInfo(url, "doGetChannelAlbumsByUrl", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetChannelAlbumFailed(info);
+                }
+            }
+
+            //成功（乐视视频基本都是横图）
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    ErrorInfo info = buildErrorInfo(url, "doGetChannelAlbumsByUrl", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetChannelAlbumFailed(info);
+                    return;
+                }
+
+                /**
+                 * 拿到Json串，解析Json
+                 */
+                String json = response.body().string();
+                try {
+                    JSONObject resultJson = new JSONObject(json);
+                    JSONObject bodyJson = resultJson.optJSONObject("body");
+
+                    //有数据解析
+                    if (bodyJson.optInt("album_count") > 0) {
+                        //将结果转化为AlbumList
+                        AlbumList list = new AlbumList();
+                        JSONArray albumListJosn = bodyJson.optJSONArray("album_list");
+                        for (int i = 0; i < albumListJosn.length(); i++) {
+                            Album album = new Album(Site.LETV);
+                            JSONObject albumJson = albumListJosn.getJSONObject(i);
+                            album.setAlbumId(albumJson.getString("aid"));
+                            album.setAlbumDesc(albumJson.getString("subname"));//描述
+                            album.setTitle(albumJson.getString("name"));
+                            album.setTip(albumJson.getString("subname"));
+
+                            //由于图片有两个选项，我们只需要选择一个即可
+                            JSONObject jsonImage = albumJson.getJSONObject("images");
+                            //读取【400*300】字符:用StringEscapeUtils解析
+                            String imageurl = StringEscapeUtils.unescapeJava(jsonImage.getString("400*300"));
+                            album.setHorImgUrl(imageurl);
+                            list.add(album);
+                        }
+
+                        /**
+                         *  有了数据之后就可以将list传给回调
+                         */
+                        if (list != null) {
+                            if (list.size() > 0 && listener != null) {
+                                listener.onGetChannelAlbumSuccess(list);
+                            }
+                        } else {
+                            ErrorInfo info = buildErrorInfo(url, "doGetChannelAlbumsByUrl", null, ErrorInfo.ERROR_TYPE_DATA_CONVERT);
+                            listener.onGetChannelAlbumFailed(info);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    ErrorInfo info = buildErrorInfo(url, "doGetChannelAlbumsByUrl", null, ErrorInfo.ERROR_TYPE_PARSE_JSON);
+                    listener.onGetChannelAlbumFailed(info);
+                }
+            }
+        });
+    }
+
+    /**
+     * 封装为ErrorInfo
+     *
+     * @param url
+     * @param functionName
+     * @param e
+     * @param type
+     * @return
+     */
+    private ErrorInfo buildErrorInfo(String url, String functionName, Exception e, int type) {
+        ErrorInfo info = new ErrorInfo(Site.LETV, type);
+        info.setExceptionString(e.getMessage());
+        info.setFunctionName(functionName);
+        info.setUrl(url);
+        info.setTag(TAG);
+        info.setClassName(TAG);
+        return info;
+    }
+
+
 //    /**
 //     * 补全详情页数据
 //     *
