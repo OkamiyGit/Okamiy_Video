@@ -22,6 +22,8 @@ public class Site {
             case LETV:
                 siteName = "乐视视频";
                 break;
+            default:
+                break;
         }
     }
 

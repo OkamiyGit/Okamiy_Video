@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
-        android:padding="2dp"
+        android:padding="@dimen/dimen_4dp"
         android:scrollbars="none"/>
 
     <TextView
@@ -18,5 +18,5 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/data_failed_tip"
-        android:textSize="26sp"/>
+        android:textSize="@dimen/dimen_32sp"/>
 </FrameLayout>

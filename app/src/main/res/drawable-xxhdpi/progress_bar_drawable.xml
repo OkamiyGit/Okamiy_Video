@@ -16,7 +16,6 @@
                     android:centerColor="@color/progress_center_color"
                     android:endColor="@color/progress_end_color"
                     />
-
             </shape>
 
         </clip>

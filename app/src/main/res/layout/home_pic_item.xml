@@ -16,9 +16,9 @@
     <TextView
         android:id="@+id/tv_des"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginLeft="3dp"
+        android:layout_height="@dimen/dimen_40dp"
+        android:layout_marginLeft="@dimen/dimen_6dp"
         android:layout_gravity="bottom|left"
         android:textColor="@color/white"
-        android:textSize="14sp"/>
+        android:textSize="@dimen/dimen_28sp"/>
 </FrameLayout>

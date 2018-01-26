@@ -73,13 +73,13 @@ public class HomeActivity extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 //清除默认的选中
                 if (mPreItem != null) {
-                    //TODO
                     mPreItem.setCheckable(false);
                 }
 
                 //选中那个menu，就切换那个Fragment
                 switch (item.getItemId()) {
                     case R.id.navigation_item_video:
+                        mPreItem.setChecked(false);
                         switchFragment(HomeFragment.class);
                         mToolBar.setTitle(R.string.home_title);
                         break;
@@ -94,13 +94,15 @@ public class HomeActivity extends BaseActivity {
                     default:
                         break;
                 }
-                //选中完成之后,关掉抽屉，将选中的menu赋值给mPreItem，并设置为选中状态
+
+                /**
+                 * 选中完成之后,关掉抽屉，先把mPreItem选中状态更改为false，再将选中的menu
+                 * 赋值给mPreItem，将新的mPreItem设置为选中状态
+                 */
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
+                mPreItem.setChecked(false);
                 mPreItem = item;
-                //TODO
                 mPreItem.setChecked(true);
-                //同步状态
-                mActionBarDrawerToggle.syncState();
                 return false;
             }
         });
@@ -113,13 +115,13 @@ public class HomeActivity extends BaseActivity {
         //如果fragment加载到activity了，就隐藏当前mCurrentFragment显示我们创建的Fragment
         if (fragment.isAdded()) {
             mFragmentManager.beginTransaction().hide(mCurrentFragment).show(fragment).commitAllowingStateLoss();
-        }else{
+        } else {
             //没有加载进来，就将当前fragment进行提交
-            mFragmentManager.beginTransaction().hide(mCurrentFragment).add(R.id.fl_main_content,fragment).commitAllowingStateLoss();
+            mFragmentManager.beginTransaction().hide(mCurrentFragment).add(R.id.fl_main_content, fragment).commitAllowingStateLoss();
         }
 
         //因为fragment状态变化，所以
-        mCurrentFragment=fragment;
+        mCurrentFragment = fragment;
     }
 
     @Override
@@ -129,7 +131,8 @@ public class HomeActivity extends BaseActivity {
     }
 
     /**
-     *  传递事件给BlogFragment
+     * 传递事件给BlogFragment
+     *
      * @param keyCode
      * @param event
      * @return
@@ -138,9 +141,16 @@ public class HomeActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.d("ActionBar", "OnKey事件");
 
-        if(mCurrentFragment instanceof BlogFragment){
+        if (mCurrentFragment instanceof BlogFragment) {
             Log.i(TAG, "HomeActivity     =====      onKeyDown: ");
-            BlogFragment.onKeyDown(keyCode, event);
+            boolean blogFragment = BlogFragment.onKeyDown(keyCode, event);
+            /**
+             * 返回true，表示BlogFragment有消耗了事件，即点击了返回键并且webview有上一页记录
+             * 返回false,取反，，不处理交给父布局处理
+             */
+            if (blogFragment) {
+                return blogFragment;
+            }
         }
         return super.onKeyDown(keyCode, event);
     }

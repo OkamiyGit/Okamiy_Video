@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -47,6 +48,9 @@ public class BlogFragment extends BaseFragment {
         mProgressBar = bindViewId(R.id.pb_progress);
         mWebView = bindViewId(R.id.webview);
 
+        //设置进度条背景，用自定义的
+        mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.progress_bar_drawable));
+
         //用来设置webview属性
         WebSettings webSettings = mWebView.getSettings();
         //支持js脚本
@@ -83,9 +87,8 @@ public class BlogFragment extends BaseFragment {
         //加载网页
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return false;
             }
         });
         mWebView.setWebChromeClient(mWebChromeClient);
@@ -106,12 +109,13 @@ public class BlogFragment extends BaseFragment {
      */
 
     public static boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
             Log.i(TAG, "BlogFragmrnt  -------  onKeyDown: ");
             mWebView.goBack();
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
     @Override

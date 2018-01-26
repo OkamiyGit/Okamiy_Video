@@ -86,14 +86,19 @@ public class DetailListActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-            //平台Id，频道id
-            Fragment fragment = DetailListFragment.newInstance(new Site(1).getSiteId(), mChannelId);
+            /**
+             * 根据Item的positon创建对应的Fragment
+             * 参数： 平台Id，频道id
+             * position 默认为0,+1为我们的搜狐视频
+             *
+             */
+            Fragment fragment = DetailListFragment.newInstance(position + 1, mChannelId);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return Site.MAX_SITE;
         }
 
         @Override

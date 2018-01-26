@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="@dimen/dimen_20dp"
         android:src="@drawable/head_image_0"/>
 
     <TextView
@@ -22,6 +22,6 @@
         android:gravity="center"
         android:text="@string/load_more_text"
         android:textColor="@color/grey_medium"
-        android:textSize="16sp"/>
+        android:textSize="@dimen/dimen_32sp"/>
 
 </LinearLayout>

@@ -2,8 +2,6 @@ package com.example.wangqing.okamiy_video.home;
 
 import android.support.v4.app.Fragment;
 
-import com.example.wangqing.okamiy_video.base.BaseFragment;
-
 import java.util.HashMap;
 
 /**
@@ -17,6 +15,7 @@ public class FragmentManagerWrapper {
     private volatile static FragmentManagerWrapper mInstance = null;
     /**
      * key :对应的Fragment的类名，value ：BaseFragment
+     * hashmap保证key 一一对应value，相同key则替换value
      */
     private HashMap<String, Fragment> mHashMap = new HashMap<>();
 
@@ -65,6 +64,7 @@ public class FragmentManagerWrapper {
             }
         }
 
+        //hashmap保证key 一一对应value，相同key则替换value
         if (isobtain) {
             mHashMap.put(className, fragment);
         }
