@@ -78,7 +78,7 @@ public class PullLoadRecyclerView extends LinearLayout {
         mFootView.setVisibility(GONE);
 
         //刷新的颜色
-        mSwipeRefreshLayout.setColorSchemeColors(android.R.color.holo_green_dark, android.R.color.holo_blue_dark, android.R.color.holo_orange_dark);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_green_dark, android.R.color.holo_blue_dark, android.R.color.holo_orange_dark);
         //设置刷新监听
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayoutOnRefresh());
         //设置加载更多监听

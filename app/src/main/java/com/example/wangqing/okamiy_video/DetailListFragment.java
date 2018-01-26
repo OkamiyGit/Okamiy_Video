@@ -2,6 +2,7 @@ package com.example.wangqing.okamiy_video;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.wangqing.okamiy_video.api.OnGetChannelAlbumListener;
@@ -23,6 +25,7 @@ import com.example.wangqing.okamiy_video.model.AlbumList;
 import com.example.wangqing.okamiy_video.model.Channel;
 import com.example.wangqing.okamiy_video.model.ErrorInfo;
 import com.example.wangqing.okamiy_video.model.Site;
+import com.example.wangqing.okamiy_video.utils.ImageUtils;
 import com.example.wangqing.okamiy_video.widget.PullLoadRecyclerView;
 
 /**
@@ -36,6 +39,7 @@ public class DetailListFragment extends BaseFragment {
     private int mChannelId;
     private static final String CHANNEL_ID = "channelid";
     private static final String SITE_ID = "siteid";
+    private static final int CLUMNS_NUM = 2;
     //刷新时长
     private static final int REFREASH_DURATION = 1500;
     //加载更多时长（加在一页或者更多数据）
@@ -92,6 +96,9 @@ public class DetailListFragment extends BaseFragment {
         if (mSiteId == Site.LETV) {
             mColumns = 2;
             //在乐视下相关频道为2列
+            mAdapter.setColumns(mColumns);
+        } else {
+            mColumns = 3;
             mAdapter.setColumns(mColumns);
         }
     }
@@ -236,7 +243,7 @@ public class DetailListFragment extends BaseFragment {
         public DetailListAdapter(Activity activity, Channel channel) {
             this.mChannel = channel;
             this.mContext = activity;
-            this.mAlbumList = new AlbumList();
+            mAlbumList = new AlbumList();
         }
 
         @Override
@@ -265,35 +272,36 @@ public class DetailListFragment extends BaseFragment {
                     itemViewHolder.albumTip.setText(album.getTip());
                 }
 
-                //                Point point = null;
-                //                //重新计算宽高
-                //                if (mColumns == 2) {
-                //                    point = ImageUtils.getHorPostSize(mContext, mColumns);
-                //                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(point.x, point.y);
-                //                    itemViewHolder.albumPoster.setLayoutParams(params);
-                //                } else {
-                //                    point = ImageUtils.getVerPostSize(mContext, mColumns);
-                //                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(point.x, point.y);
-                //                    itemViewHolder.albumPoster.setLayoutParams(params);
-                //                }
-                //
-                //                if (album.getVerImgUrl() != null) {
-                //                    ImageUtils.disPlayImage(itemViewHolder.albumPoster, album.getVerImgUrl(), point.x, point.y);
-                //                } else if (album.getHorImgUrl() != null) {
-                //                    ImageUtils.disPlayImage(itemViewHolder.albumPoster, album.getHorImgUrl(), point.x, point.y);
-                //                } else {
-                //                    //TOD 默认图
-                //                }
-                //                itemViewHolder.resultContainer.setOnClickListener(new View.OnClickListener() {
-                //                    @Override
-                //                    public void onClick(View v) {
-                //                        if (mChannelId == Channel.DOCUMENTRY || mChannelId == Channel.MOVIE || mChannelId == Channel.VARIETY || mChannelId == Channel.MUSIC) {
-                //                            AlbumDetailActivity.launch(getActivity(), album, 0, true);
-                //                        } else {
-                //                            AlbumDetailActivity.launch(getActivity(), album);
-                //                        }
-                //                    }
-                //                });
+                Point point = null;
+                //重新计算宽高
+                if (mColumns == CLUMNS_NUM) {
+                    point = ImageUtils.getHorPostSize(mContext, mColumns);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(point.x, point.y);
+                    itemViewHolder.albumPoster.setLayoutParams(params);
+                } else {
+                    point = ImageUtils.getVerPostSize(mContext, mColumns);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(point.x, point.y);
+                    itemViewHolder.albumPoster.setLayoutParams(params);
+                }
+
+                //判断垂直方向上的海报是否存在
+                if (album.getVerImgUrl() != null) {
+                    ImageUtils.disPlayImage(itemViewHolder.albumPoster, album.getVerImgUrl(), point.x, point.y);
+                } else if (album.getHorImgUrl() != null) {
+                    ImageUtils.disPlayImage(itemViewHolder.albumPoster, album.getHorImgUrl(), point.x, point.y);
+                } else {
+                    //TOD 默认图: 布局已经添加背景
+                }
+                itemViewHolder.resultContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        if (mChannelId == Channel.DOCUMENTRY || mChannelId == Channel.MOVIE || mChannelId == Channel.VARIETY || mChannelId == Channel.MUSIC) {
+//                            AlbumDetailActivity.launch(getActivity(), album, 0, true);
+//                        } else {
+//                            AlbumDetailActivity.launch(getActivity(), album);
+//                        }
+                    }
+                });
 
             }
 
