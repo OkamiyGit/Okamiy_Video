@@ -23,7 +23,7 @@ public class BlogFragment extends BaseFragment {
     private static WebView mWebView;
     private ProgressBar mProgressBar;
     private static final int MAX_VALUE = 100;
-    private static final String BLOG_URL = "http://m.blog.csdn.net/blog/index?username=hejjunlin";
+    private static final String BLOG_URL = "http://blog.csdn.net/Demo006";
 
     //监听webview加载情况
     private WebChromeClient mWebChromeClient = new WebChromeClient() {
@@ -110,7 +110,7 @@ public class BlogFragment extends BaseFragment {
 
     public static boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
-            Log.i(TAG, "BlogFragmrnt  -------  onKeyDown: ");
+            Log.i(TAG, "BlogActivity     =====      onKeyDown:");
             mWebView.goBack();
             return true;
         } else {

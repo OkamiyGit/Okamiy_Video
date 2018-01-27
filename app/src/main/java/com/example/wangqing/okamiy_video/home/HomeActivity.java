@@ -10,12 +10,17 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.wangqing.okamiy_video.R;
 import com.example.wangqing.okamiy_video.base.BaseActivity;
 
 public class HomeActivity extends BaseActivity {
     private static final String TAG = "HomeActivity";
+    //退出时间
+    private long currentBackPressedTime = 0;
+    //退出间隔
+    private static final int BACK_PRESSED_INTERVAL = 2000;
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -151,5 +156,21 @@ public class HomeActivity extends BaseActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 双击退出程序
+     */
+    @Override
+    public void onBackPressed() {
+        Log.i(TAG, "onBackPressed:");
+        //判断时间间隔
+        if (System.currentTimeMillis() - currentBackPressedTime > BACK_PRESSED_INTERVAL) {
+            currentBackPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "再按一次返回键退出程序", Toast.LENGTH_LONG).show();
+        } else {
+            //退出
+            finish();
+        }
     }
 }
