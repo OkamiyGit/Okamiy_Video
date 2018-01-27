@@ -202,7 +202,7 @@ public class DetailListFragment extends BaseFragment {
                 });
                 //                //打印返回数据
                 //                for (Album album : albumList) {
-                //                    Log.i(TAG, "onGetChannelAlbumSuccess: " + album.toJson());
+                //                    Log.i(TAG, "onGetChannelAlbumSuccess: " + album.toString());
                 //                }
             }
 
@@ -219,10 +219,8 @@ public class DetailListFragment extends BaseFragment {
                         mEmptyView.setText(getActivity().getResources().getString(R.string.data_failed_tip));
                     }
                 });
-
             }
         });
-
     }
 
     /**

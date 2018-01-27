@@ -1,6 +1,5 @@
 package com.example.wangqing.okamiy_video.home;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        Log.d(TAG, ">> initView ");
+//        Log.d(TAG, ">> initView ");
         //轮播图相关
         LoopViewPager viewPager = bindViewId(R.id.loop_viewpager);
         CircleIndicator indicator = bindViewId(R.id.indicator);
@@ -51,7 +50,7 @@ public class HomeFragment extends BaseFragment {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, ">> onItemClick " + position);
+//                Log.d(TAG, ">> onItemClick " + position);
                 switch (position) {
                     case 6:
                         //跳转直播

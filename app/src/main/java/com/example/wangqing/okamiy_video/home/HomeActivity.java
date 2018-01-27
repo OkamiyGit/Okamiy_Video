@@ -139,8 +139,6 @@ public class HomeActivity extends BaseActivity {
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.d("ActionBar", "OnKey事件");
-
         if (mCurrentFragment instanceof BlogFragment) {
             Log.i(TAG, "HomeActivity     =====      onKeyDown: ");
             boolean blogFragment = BlogFragment.onKeyDown(keyCode, event);
