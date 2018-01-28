@@ -9,7 +9,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.wangqing.okamiy_video.DetailListActivity;
+import com.example.wangqing.okamiy_video.detail.DetailListActivity;
 import com.example.wangqing.okamiy_video.R;
 import com.example.wangqing.okamiy_video.base.BaseFragment;
 import com.example.wangqing.okamiy_video.favorite.FavoriteActivity;

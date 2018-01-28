@@ -21,6 +21,18 @@ public class ImageUtils {
     private static final float HOR_POSTER_RATIO = 1.5f;
 
     /**
+     *  设置图片
+     * @param view
+     * @param url
+     */
+    public static void disPlayImage(ImageView view, String url) {
+        if (view != null && url != null) {
+            Glide.with(view.getContext()).load(url).into(view);
+        }
+    }
+
+
+    /**
      * 加载图片
      *
      * @param view

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.wangqing.okamiy_video.DetailListActivity">
+    tools:context="com.example.wangqing.okamiy_video.detail.DetailListActivity">
 
     <include layout="@layout/top_actionbar"/>
 
