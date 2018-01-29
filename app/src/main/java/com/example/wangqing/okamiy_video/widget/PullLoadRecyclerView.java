@@ -2,7 +2,6 @@ package com.example.wangqing.okamiy_video.widget;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.Nullable;
@@ -62,7 +61,6 @@ public class PullLoadRecyclerView extends LinearLayout {
     /**
      * 初始化view
      */
-    @SuppressLint("ResourceAsColor")
     private void initViews(Context context) {
         this.mContext = context;
         View view = LayoutInflater.from(context).inflate(R.layout.pull_loadmore_layout, null);

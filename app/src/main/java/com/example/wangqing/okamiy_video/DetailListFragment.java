@@ -56,10 +56,7 @@ public class DetailListFragment extends BaseFragment {
     private int pageNo;
     //每页显示的数据条目
     private int pageSize = 30;
-    /**
-     * 刷数据相关的handler
-     * 直接创建Handler可能会引发内存泄漏，故采用这种方式
-     */
+
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public static Fragment newInstance(int siteId, int channelId) {
@@ -121,8 +118,6 @@ public class DetailListFragment extends BaseFragment {
         mRecyclerView.setGridLayout(mColumns);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnPullLoadMoreListener(new PullLoadMoreListener());
-
-
     }
 
     @Override

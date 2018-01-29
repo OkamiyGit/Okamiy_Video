@@ -3,6 +3,7 @@ package com.example.wangqing.okamiy_video.home;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -132,11 +133,16 @@ public class BlogFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
+        if (mWebView != null) {
+            mWebView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            //清除缓存
+            mWebView.clearCache(true);
+            //清除历史记录
+            mWebView.clearHistory();
+            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
+            mWebView.destroy();
+            mWebView = null;
+        }
         super.onDestroy();
-        //清除缓存
-        mWebView.clearCache(true);
-        //清除历史记录
-        mWebView.clearHistory();
-        mWebView.destroy();
     }
 }
