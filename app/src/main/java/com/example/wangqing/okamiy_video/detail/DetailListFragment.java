@@ -1,4 +1,4 @@
-package com.example.wangqing.okamiy_video;
+package com.example.wangqing.okamiy_video.detail;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wangqing.okamiy_video.R;
 import com.example.wangqing.okamiy_video.api.OnGetChannelAlbumListener;
 import com.example.wangqing.okamiy_video.api.SiteApi;
 import com.example.wangqing.okamiy_video.base.BaseFragment;
@@ -277,7 +278,7 @@ public class DetailListFragment extends BaseFragment {
             }
 
             //获取Ablum
-            Album album = getItem(position);
+            final Album album = getItem(position);
             //进行匹配,之后设置数据
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
@@ -309,20 +310,21 @@ public class DetailListFragment extends BaseFragment {
                     //TOD 默认图: 布局已经添加背景
                 }
 
-                //                //设置item监听
-                //                itemViewHolder.resultContainer.setOnClickListener(new View.OnClickListener() {
-                //                    @Override
-                //                    public void onClick(View v) {
-                //                        if (mChannelId == Channel.DOCUMENTRY || mChannelId == Channel.MOVIE || mChannelId == Channel.VARIETY || mChannelId == Channel.MUSIC) {
-                //                            AlbumDetailActivity.launch(getActivity(), album, 0, true);
-                //                        } else {
-                //                            AlbumDetailActivity.launch(getActivity(), album);
-                //                        }
-                //                    }
-                //                });
-
+                //设置item监听
+                itemViewHolder.resultContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //分类处理
+                        if (mChannelId == Channel.DOCUMENTRY || mChannelId == Channel.MOVIE || mChannelId == Channel.VARIETY || mChannelId == Channel.MUSIC) {
+                            //纪录片、电影等
+                            AlbumDetailActivity.launch(getActivity(), album, 0, true);
+                        } else {
+                            //电视剧和动漫频道（这两种有多少级，其他的没有所以分开）
+                            AlbumDetailActivity.launch(getActivity(), album);
+                        }
+                    }
+                });
             }
-
         }
 
         @Override

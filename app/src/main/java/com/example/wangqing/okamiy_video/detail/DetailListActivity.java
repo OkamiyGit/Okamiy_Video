@@ -1,4 +1,4 @@
-package com.example.wangqing.okamiy_video;
+package com.example.wangqing.okamiy_video.detail;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.wangqing.okamiy_video.R;
 import com.example.wangqing.okamiy_video.base.BaseActivity;
 import com.example.wangqing.okamiy_video.indircator.CoolIndicatorLayout;
 import com.example.wangqing.okamiy_video.indircator.IPagerIndicatorView;

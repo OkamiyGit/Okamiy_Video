@@ -1,16 +1,27 @@
 package com.example.wangqing.okamiy_video.api;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.example.wangqing.okamiy_video.AppManager;
 import com.example.wangqing.okamiy_video.model.Album;
 import com.example.wangqing.okamiy_video.model.AlbumList;
 import com.example.wangqing.okamiy_video.model.Channel;
 import com.example.wangqing.okamiy_video.model.ErrorInfo;
 import com.example.wangqing.okamiy_video.model.Site;
+import com.example.wangqing.okamiy_video.model.sohu.DetailResult;
 import com.example.wangqing.okamiy_video.model.sohu.Result;
 import com.example.wangqing.okamiy_video.model.sohu.ResultAlbum;
+import com.example.wangqing.okamiy_video.model.sohu.Video;
+import com.example.wangqing.okamiy_video.model.sohu.VideoList;
+import com.example.wangqing.okamiy_video.model.sohu.VideoResult;
 import com.example.wangqing.okamiy_video.utils.OkHttpUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -35,15 +46,19 @@ public class SohuApi extends BaseSiteApi {
     //http://api.tv.sohu.com/v4/album/info/9112373.json?plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=6.2.0&sysver=4.4.2&partner=47
     private final static String API_KEY = "plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=6.2.0&sysver=4.4.2&partner=47";
     private final static String API_ALBUM_INFO = "http://api.tv.sohu.com/v4/album/info/";
+
     //http://api.tv.sohu.com/v4/search/channel.json?cid=2&o=1&plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=6.2.0&sysver=4.4.2&partner=47&page=1&page_size=1
     private final static String API_CHANNEL_ALBUM_FORMAT = "http://api.tv.sohu.com/v4/search/channel.json" +
             "?cid=%s&o=1&plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&" +
             "sver=6.2.0&sysver=4.4.2&partner=47&page=%s&page_size=%s";
+
     //http://api.tv.sohu.com/v4/album/videos/9112373.json?page=1&page_size=50&order=0&site=1&with_trailer=1&plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=6.2.0&sysver=4.4.2&partner=47
     private final static String API_ALBUM_VIDOES_FORMAT = "http://api.tv.sohu.com/v4/album/videos/%s.json?page=%s&page_size=%s&order=0&site=1&with_trailer=1&plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=6.2.0&sysver=4.4.2&partner=47";
-    // 播放url
+
+    // 播放url（地址中间的s%是需要变化的地方）
     //http://api.tv.sohu.com/v4/video/info/3669315.json?site=1&plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=4.5.1&sysver=4.4.2&partner=47&aid=9112373
     private final static String API_VIDEO_PLAY_URL_FORMAT = "http://api.tv.sohu.com/v4/video/info/%s.json?site=1&plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=4.5.1&sysver=4.4.2&partner=47&aid=%s";
+
     //真实url格式 m3u8
     //http://hot.vrs.sohu.com/ipad3669271_4603585256668_6870592.m3u8?plat=6uid=f5dbc7b40dad477c8516885f6c681c01&pt=5&prod=app&pg=1
 
@@ -193,144 +208,188 @@ public class SohuApi extends BaseSiteApi {
         return channelId;
     }
 
-    //    public void onGetAlbumDetail(final Album album, final OnGetAlbumDetailListener listener) {
-    //        final String url = API_ALBUM_INFO + album.getAlbumId() + ".json?" + API_KEY;
-    //        OkHttpUtils.excute(url, new Callback() {
-    //            @Override
-    //            public void onFailure(Call call, IOException e) {
-    //                if (listener != null) {
-    //                    ErrorInfo info = buildErrorInfo(url, "onGetAlbumDetail", e, ErrorInfo.ERROR_TYPE_URL);
-    //                    listener.onGetAlbumDetailFailed(info);
-    //                }
-    //            }
-    //
-    //            @Override
-    //            public void onResponse(Call call, Response response) throws IOException {
-    //                if (!response.isSuccessful()) {
-    //                    ErrorInfo info = buildErrorInfo(url, "onGetAlbumDetail", null, ErrorInfo.ERROR_TYPE_HTTP);
-    //                    listener.onGetAlbumDetailFailed(info);
-    //                    return;
-    //                }
-    //                //Data
-    //                DetailResult result = AppManager.getGson().fromJson(response.body().string(), DetailResult.class);
-    //                if (result.getResultAlbum() != null) {
-    //                    if (result.getResultAlbum().getLastVideoCount() > 0) {
-    //                        album.setVideoTotal(result.getResultAlbum().getLastVideoCount());
-    //                    } else {
-    //                        album.setVideoTotal(result.getResultAlbum().getTotalVideoCount());
-    //                    }
-    //                }
-    //                //set完数据后,进行通知
-    //                if (listener != null) {
-    //                    listener.onGetAlbumDetailSuccess(album);
-    //                }
-    //            }
-    //        });
-    //    }
-    //
-    //    public void onGetVideo(final Album album, int pageSize, int pageNo, final OnGetVideoListener listener) {
-    //        final String url = String.format(API_ALBUM_VIDOES_FORMAT, album.getAlbumId(), pageNo, pageSize);
-    //        OkHttpUtils.excute(url, new Callback() {
-    //            @Override
-    //            public void onFailure(Call call, IOException e) {
-    //                if (listener != null) {
-    //                    ErrorInfo info = buildErrorInfo(url, "onGetVideo", e, ErrorInfo.ERROR_TYPE_URL);
-    //                    listener.OnGetVideoFailed(info);
-    //                }
-    //            }
-    //
-    //            @Override
-    //            public void onResponse(Call call, Response response) throws IOException {
-    //                if (!response.isSuccessful()) {
-    //                    ErrorInfo info = buildErrorInfo(url, "onGetVideo", null, ErrorInfo.ERROR_TYPE_HTTP);
-    //                    listener.OnGetVideoFailed(info);
-    //                    return;
-    //                }
-    //                //                Log.d(TAG, " >> onGetVideo response  " + response.body().string());
-    //                VideoResult result = AppManager.getGson().fromJson(response.body().string(), VideoResult.class);
-    //                if (result != null) {
-    //                    //                    Log.d(TAG, " >> onGetVideo result  " + result.toString());
-    //                    VideoList videoList = new VideoList();
-    //                    if (result.getData() != null) {
-    //                        for (Video video : result.getData().getVideoList()) {
-    //                            Video v = new Video();
-    //                            v.setSite(album.getSite().getSiteId());
-    //                            v.setHorHighPic(video.getHorHighPic());
-    //                            v.setVerHighPic(video.getVerHighPic());
-    //                            v.setVid(video.getVid());
-    //                            v.setAid(video.getAid());
-    //                            v.setVideoName(video.getVideoName());
-    //                            videoList.add(v);
-    //                        }
-    //                    }
-    //                    if (listener != null) {
-    //                        Log.d(TAG, " >> listener notify success!! ");
-    //                        listener.OnGetVideoSuccess(videoList);
-    //                    }
-    //                }
-    //            }
-    //        });
-    //    }
-    //
-    //    //取视频播放url
-    //    public void onGetVideoPlayUrl(final Video video, final OnGetVideoPlayUrlListener listener) {
-    //        final String url = String.format(API_VIDEO_PLAY_URL_FORMAT, video.getVid(), video.getAid());
-    //        OkHttpUtils.excute(url, new Callback() {
-    //            @Override
-    //            public void onFailure(Call call, IOException e) {
-    //                if (listener != null) {
-    //                    ErrorInfo info = buildErrorInfo(url, "onGetVideoPlayUrls", e, ErrorInfo.ERROR_TYPE_URL);
-    //                    listener.onGetFailed(info);
-    //                }
-    //            }
-    //
-    //            @Override
-    //            public void onResponse(Call call, Response response) throws IOException {
-    //                if (!response.isSuccessful()) {
-    //                    ErrorInfo info = buildErrorInfo(url, "onGetVideoPlayUrls", null, ErrorInfo.ERROR_TYPE_HTTP);
-    //                    listener.onGetFailed(info);
-    //                    return;
-    //                }
-    //                try {
-    //                    JSONObject result = new JSONObject(response.body().string());
-    //                    JSONObject data = result.optJSONObject("data");
-    //                    String normalUrl = data.optString("url_nor");
-    //                    if (!TextUtils.isEmpty(normalUrl)) {
-    //                        normalUrl += "uid=" + getUUID() + "&pt=5&prod=app&pg=1";
-    //                        video.setNormalUrl(normalUrl);
-    //                        // 通知获取到标清码流url
-    //                        if (listener != null) {
-    //                            listener.onGetNoramlUrl(video, normalUrl);
-    //                        }
-    //                    }
-    //                    String superUrl = data.optString("url_super");
-    //                    if (!TextUtils.isEmpty(superUrl)) {
-    //                        superUrl += "uid=" + getUUID() + "&pt=5&prod=app&pg=1";
-    //                        video.setSuperUrl(superUrl);
-    //                        // 通知获取到超清码流url
-    //                        if (listener != null) {
-    //                            listener.onGetSuperUrl(video, superUrl);
-    //                        }
-    //                    }
-    //                    String highUrl = data.optString("url_high");
-    //                    if (!TextUtils.isEmpty(highUrl)) {
-    //                        highUrl += "uid=" + getUUID() + "&pt=5&prod=app&pg=1";
-    //                        video.setSuperUrl(highUrl);
-    //                        // 通知获取到高清码流url
-    //                        if (listener != null) {
-    //                            listener.onGetHighUrl(video, highUrl);
-    //                        }
-    //                    }
-    //                } catch (JSONException e) {
-    //                    e.printStackTrace();
-    //                }
-    //
-    //            }
-    //        });
-    //    }
-    //
-    //    private String getUUID() {
-    //        UUID uuid = UUID.randomUUID();
-    //        return uuid.toString().replace("-", "");
-    //    }
+    /**
+     * 补全详情页数据
+     *
+     * @param album
+     * @param listener
+     */
+    public void onGetAlbumDetail(final Album album, final OnGetAlbumDetailListener listener) {
+        //拼接url
+        final String url = API_ALBUM_INFO + album.getAlbumId() + ".json?" + API_KEY;
+        OkHttpUtils.excute(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    //失败回调：通过listener回调出去
+                    ErrorInfo info = buildErrorInfo(url, "onGetAlbumDetail", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetAlbumDetailFailed(info);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //不成功时我们也需要做处理：比如重定向
+                if (!response.isSuccessful()) {
+                    ErrorInfo info = buildErrorInfo(url, "onGetAlbumDetail", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetAlbumDetailFailed(info);
+                    return;
+                }
+
+                //Data
+                DetailResult result = AppManager.getGson().fromJson(response.body().string(), DetailResult.class);
+                if (result.getResultAlbum() != null) {
+                    Log.i(TAG, ">>      乐视详情页  onGetAlbumDetail 获取的数据    >>" + result.toString());
+                    if (result.getResultAlbum().getLastVideoCount() > 0) {
+                        album.setVideoTotal(result.getResultAlbum().getLastVideoCount());
+                    } else {
+                        album.setVideoTotal(result.getResultAlbum().getTotalVideoCount());
+                    }
+                }
+
+                //set完数据后,进行通知
+                if (listener != null) {
+                    listener.onGetAlbumDetailSuccess(album);
+                }
+            }
+        });
+    }
+
+    /**
+     * 取video相关信息
+     *
+     * @param album
+     * @param pageSize
+     * @param pageNo
+     * @param listener
+     */
+    public void onGetVideo(final Album album, int pageSize, int pageNo, final OnGetVideoListener listener) {
+        //拼接Url
+        final String url = String.format(API_ALBUM_VIDOES_FORMAT, album.getAlbumId(), pageNo, pageSize);
+        OkHttpUtils.excute(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    ErrorInfo info = buildErrorInfo(url, "onGetVideo", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.OnGetVideoFailed(info);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    ErrorInfo info = buildErrorInfo(url, "onGetVideo", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.OnGetVideoFailed(info);
+                    return;
+                }
+
+                //                /**
+                //                 *  Okhttp在返回数据时。只能调用一次.string,liu流就会关闭，
+                //                 */
+                //                Log.i(TAG, " >>   onGetVideo response    >> " + response.body().string());
+                //解析返回的数据
+                VideoResult result = AppManager.getGson().fromJson(response.body().string(), VideoResult.class);
+                if (result != null) {
+                    Log.i(TAG, ">>      乐视详情页中间部分  onGetAlbumDetail 获取的数据    >> " + result.getData().getVideoList().toString());
+                    //把数据添加到VideoList回调出去
+                    VideoList videoList = new VideoList();
+                    if (result.getData() != null) {
+                        for (Video video : result.getData().getVideoList()) {
+                            Video v = new Video();
+                            v.setSite(album.getSite().getSiteId());
+                            v.setHorHighPic(video.getHorHighPic());
+                            v.setVerHighPic(video.getVerHighPic());
+                            v.setVid(video.getVid());
+                            v.setAid(video.getAid());
+                            v.setVideoName(video.getVideoName());
+                            videoList.add(v);
+                        }
+                    }
+
+                    if (listener != null) {
+                        Log.i(TAG, " >>   listener notify success!!   >> ");
+                        listener.OnGetVideoSuccess(videoList);
+                    }
+                }
+            }
+        });
+    }
+
+    //取视频播放url
+    public void onGetVideoPlayUrl(final Video video, final OnGetVideoPlayUrlListener listener) {
+        //拼接url
+        final String url = String.format(API_VIDEO_PLAY_URL_FORMAT, video.getVid(), video.getAid());
+        OkHttpUtils.excute(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    ErrorInfo info = buildErrorInfo(url, "onGetVideoPlayUrls", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetFailed(info);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    ErrorInfo info = buildErrorInfo(url, "onGetVideoPlayUrls", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetFailed(info);
+                    return;
+                }
+
+                try {
+                    //取其中需要的字段
+                    JSONObject result = new JSONObject(response.body().string());
+                    JSONObject data = result.optJSONObject("data");
+
+                    //标清
+                    String normalUrl = data.optString("url_nor");
+                    if (!TextUtils.isEmpty(normalUrl)) {
+                        normalUrl += "uid=" + getUUID() + "&pt=5&prod=app&pg=1";
+                        Log.i(TAG, ">>    搜狐  标清  地址   >> " + normalUrl);
+                        video.setNormalUrl(normalUrl);
+                        // 通知获取到标清码流url
+                        if (listener != null) {
+                            listener.onGetNoramlUrl(video, normalUrl);
+                        }
+                    }
+
+                    //超清
+                    String superUrl = data.optString("url_super");
+                    if (!TextUtils.isEmpty(superUrl)) {
+                        superUrl += "uid=" + getUUID() + "&pt=5&prod=app&pg=1";
+                        Log.i(TAG, ">>    搜狐  超清  地址   >> " + normalUrl);
+                        video.setSuperUrl(superUrl);
+                        // 通知获取到超清码流url
+                        if (listener != null) {
+                            listener.onGetSuperUrl(video, superUrl);
+                        }
+                    }
+
+                    //高清
+                    String highUrl = data.optString("url_high");
+                    if (!TextUtils.isEmpty(highUrl)) {
+                        highUrl += "uid=" + getUUID() + "&pt=5&prod=app&pg=1";
+                        Log.i(TAG, ">>    搜狐  高清  地址   >> " + normalUrl);
+                        video.setSuperUrl(highUrl);
+                        // 通知获取到高清码流url
+                        if (listener != null) {
+                            listener.onGetHighUrl(video, highUrl);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * 随机数
+     *
+     * @return
+     */
+    private String getUUID() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString().replace("-", "");
+    }
 }
