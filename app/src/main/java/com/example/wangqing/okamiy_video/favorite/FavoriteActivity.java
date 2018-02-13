@@ -1,26 +1,31 @@
 package com.example.wangqing.okamiy_video.favorite;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import com.example.wangqing.okamiy_video.R;
-import com.example.wangqing.okamiy_video.base.BaseActivity;
+import com.example.wangqing.okamiy_video.comment.CommonActivity;
 
-public class FavoriteActivity extends BaseActivity {
-
+public class FavoriteActivity extends CommonActivity {
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_favorite;
+    public String getTitleText() {
+        return getResources().getString(R.string.favorite_title);
     }
 
     @Override
-    protected void initView() {
-
+    public String getEmptyText() {
+        return getResources().getString(R.string.favorite_empty);
     }
 
     @Override
-    protected void initData() {
+    public Context getContext() {
+        return this;
+    }
 
+    @Override
+    public String getTableName() {
+        return "favorite";
     }
 
     public static void launch(Activity activity) {

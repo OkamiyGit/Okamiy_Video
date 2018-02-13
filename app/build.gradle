@@ -9,6 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        flavorDimensions "versionCode"
     }
     buildTypes {
         release {
@@ -16,12 +17,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        all32 { minSdkVersion 17 }
+        all64 { minSdkVersion 21 }
+    }
+
+    sourceSets.main {
+        res.srcDirs = ['src/main/res']
+        jniLibs.srcDirs = ['src/main/jniLibs']
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:cardview-v7:26.1.0'
+    compile 'com.android.support:preference-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
@@ -36,4 +47,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.hejunlin.superindicatorlibray:superindicatorlibray:1.0.3'
+    compile project(':ijkplayer-java')
 }

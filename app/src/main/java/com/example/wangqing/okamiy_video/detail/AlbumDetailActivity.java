@@ -75,13 +75,14 @@ public class AlbumDetailActivity extends BaseActivity {
         mAlbumDesc = bindViewId(R.id.tv_album_desc);
         mSuperBitstreamButton = bindViewId(R.id.bt_super);
 
+        //初始化数据库
+        mFavoriteDBHelper = new CommonDBHelper(this);
+        mFavoriteDBHelper.setParams("favorite");
+        mHistoryDBHelper = new CommonDBHelper(this);
+        mHistoryDBHelper.setParams("history");
+        //能找到说明有记录
+        mIsFavor = mFavoriteDBHelper.getAlbumById(mAlbum.getAlbumId(), mAlbum.getSite().getSiteId()) != null;
 
-        //        mFavoriteDBHelper = new CommonDBHelper(this);
-        //        mFavoriteDBHelper.setParams("favorite");
-        //        mHistoryDBHelper = new CommonDBHelper(this);
-        //        mHistoryDBHelper.setParams("history");
-        //        mIsFavor = mFavoriteDBHelper.getAlbumById(mAlbum.getAlbumId(), mAlbum.getSite().getSiteId()) != null;
-        //
         //设置播放按钮的点击监听
         mSuperBitstreamButton.setOnClickListener(mOnSuperClickListener);
         mNormalBitstreamButton = bindViewId(R.id.bt_normal);
@@ -113,7 +114,7 @@ public class AlbumDetailActivity extends BaseActivity {
 
     //三个button有共同点,tag设置的id是一样,value值不一样
     private void handleButtonClick(View v) {
-        Button button =  (Button) v;
+        Button button = (Button) v;
         //取播放源
         String url = (String) button.getTag(R.id.key_video_url);
         //码流类型
@@ -126,12 +127,12 @@ public class AlbumDetailActivity extends BaseActivity {
         if (AppManager.isNetWorkAvailable()) {
             if (AppManager.isNetworkWifiAvailable()) {
                 //wifi链接状态，进行跳转播放
-//                mHistoryDBHelper.add(mAlbum);//添加播放记录
+                //                mHistoryDBHelper.add(mAlbum);//添加播放记录
                 Intent intent = new Intent(AlbumDetailActivity.this, PlayActivity.class);
-                intent.putExtra("url",url);
-                intent.putExtra("type",type);
-                intent.putExtra("currentPosition",currentPosition);
-                intent.putExtra("video",video);
+                intent.putExtra("url", url);
+                intent.putExtra("type", type);
+                intent.putExtra("currentPosition", currentPosition);
+                intent.putExtra("video", video);
                 startActivity(intent);
             } else {
                 // TODO 拓展  数据网络
@@ -381,7 +382,7 @@ public class AlbumDetailActivity extends BaseActivity {
                 if (mIsFavor) {
                     mIsFavor = false;
                     // 收藏状态更新
-                    //                    mFavoriteDBHelper.delete(mAlbum.getAlbumId(), mAlbum.getSite().getSiteId());
+                    mFavoriteDBHelper.delete(mAlbum.getAlbumId(), mAlbum.getSite().getSiteId());
                     invalidateOptionsMenu();
                     Toast.makeText(this, "已取消收藏", Toast.LENGTH_SHORT).show();
                 }
@@ -390,11 +391,13 @@ public class AlbumDetailActivity extends BaseActivity {
                 if (!mIsFavor) {
                     mIsFavor = true;
                     // 收藏状态更新
-                    //                    mFavoriteDBHelper.add(mAlbum);
+                    mFavoriteDBHelper.add(mAlbum);
                     invalidateOptionsMenu();
                     Toast.makeText(this, "已添加收藏", Toast.LENGTH_SHORT).show();
                 }
                 return true;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
