@@ -127,7 +127,7 @@ public class AlbumDetailActivity extends BaseActivity {
         if (AppManager.isNetWorkAvailable()) {
             if (AppManager.isNetworkWifiAvailable()) {
                 //wifi链接状态，进行跳转播放
-                //                mHistoryDBHelper.add(mAlbum);//添加播放记录
+                mHistoryDBHelper.add(mAlbum);//添加播放记录
                 Intent intent = new Intent(AlbumDetailActivity.this, PlayActivity.class);
                 intent.putExtra("url", url);
                 intent.putExtra("type", type);

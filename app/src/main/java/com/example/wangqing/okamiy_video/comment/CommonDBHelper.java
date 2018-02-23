@@ -36,6 +36,10 @@ public class CommonDBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * 设置表名
+     * @param tablename
+     */
     public void setParams(String tablename) {
         TABLE_NAME = tablename;
     }

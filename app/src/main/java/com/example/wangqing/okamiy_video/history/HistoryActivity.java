@@ -1,26 +1,32 @@
 package com.example.wangqing.okamiy_video.history;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import com.example.wangqing.okamiy_video.R;
-import com.example.wangqing.okamiy_video.base.BaseActivity;
+import com.example.wangqing.okamiy_video.comment.CommonActivity;
 
-public class HistoryActivity extends BaseActivity {
+public class HistoryActivity extends CommonActivity {
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_history;
+    public String getTitleText() {
+        return getResources().getString(R.string.history_title);
     }
 
     @Override
-    protected void initView() {
-
+    public String getEmptyText() {
+        return getResources().getString(R.string.history_empty);
     }
 
     @Override
-    protected void initData() {
+    public Context getContext() {
+        return this;
+    }
 
+    @Override
+    public String getTableName() {
+        return "history";
     }
 
     public static void launch(Activity activity) {
