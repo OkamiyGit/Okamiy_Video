@@ -35,7 +35,7 @@ public class LiveItemAdapter extends RecyclerView.Adapter<LiveItemAdapter.ViewHo
     };
 
     private String[] mUrlList = new String[]{
-            "http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8",
+            "rtmp://livertmp-xl.wasu.cn/live10/hd_cctv1",
             "http://220.248.175.231:6610/001/2/ch00000090990000001014/index.m3u8?virtualDomain=001.live_hls.zte.com",
             "http://220.248.175.230:6610/001/2/ch00000090990000001023/index.m3u8?virtualDomain=001.live_hls.zte.com",
             "http://220.248.175.231:6610/001/2/ch00000090990000001015/index.m3u8?virtualDomain=001.live_hls.zte.com",

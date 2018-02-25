@@ -95,6 +95,7 @@ public class PlayActivity extends BaseActivity implements GestureDetectorControl
 
     @Override
     protected void initView() {
+        mIsPanelShowing = true;
         mUrl = getIntent().getStringExtra("url");
         mLiveTitle = getIntent().getStringExtra("title");
         mStreamType = getIntent().getIntExtra("type", 0);

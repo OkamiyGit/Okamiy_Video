@@ -415,6 +415,7 @@ public class LetvApi extends BaseSiteApi {
                 String result = response.body().string();
                 try {
                     JSONObject resultJson = new JSONObject(result);
+                    Log.i(TAG, "onResponse: ++++++++++++++"+resultJson.toString());
                     JSONObject infosJson = resultJson.getJSONObject("body").getJSONObject("videofile").getJSONObject("infos");
                     if (infosJson != null) {
                         JSONObject normalInfoObject = infosJson.getJSONObject("mp4_350");
